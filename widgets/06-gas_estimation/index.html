@@ -1,0 +1,154 @@
+<html>
+
+<head>
+    <script src="..\common\ethers-5.2.min.js"></script>
+    <link rel="stylesheet" href="..\common\styles.css">
+</head>
+
+<body>
+    <div>
+        <h2>Gas Estimation</h2>
+    </div>
+    <div id="content">
+        <div>
+            <label for="gasprice">Gas Price</label>
+            <input type="text" id="gasprice" name="gasprice">
+        </div>
+        <div>
+            <label for="gascost">Gas Cost</label>
+            <input type="text" id="gascost" name="gascost">
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let gascost = document.querySelector('#gascost');
+            let gasprice = document.querySelector('#gasprice');
+
+            //const provider = new ethers.providers.Web3Provider(window.ethereum, );
+            const provider = new ethers.providers.InfuraProvider("goerli");
+
+            const abi = [
+                {
+                    "inputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "constructor"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "a",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "b",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "addition",
+                    "outputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "pure",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "address",
+                            "name": "add",
+                            "type": "address"
+                        }
+                    ],
+                    "name": "balance",
+                    "outputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "string",
+                            "name": "_string",
+                            "type": "string"
+                        }
+                    ],
+                    "name": "hash",
+                    "outputs": [
+                        {
+                            "internalType": "bytes32",
+                            "name": "",
+                            "type": "bytes32"
+                        }
+                    ],
+                    "stateMutability": "pure",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "a",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "b",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "multiplication",
+                    "outputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "pure",
+                    "type": "function"
+                }
+            ];
+
+            const address = "0x504736be011e4924aAE797D64137af36BE0f656D";
+            const contract = new ethers.Contract(address, abi, provider);
+            contract.estimateGas.balance("0x976EA74026E726554dB657fA54763abd0C3a0aa9").then(gc => {
+                gascost.value = gc.toString();
+            });
+
+
+
+            /*
+            provider.estimateGas({
+                to: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+                // `function deposit() payable`
+                data: "0x1249c58b",//"0xd0e30db0",
+                //value: ethers.utils.parseEther("1.0")
+            }).then(res => {
+                console.log(res);
+                gascost.value = res.toString();
+            });
+            */
+
+
+            provider.getGasPrice().then(gp => {
+                price = ethers.utils.formatUnits(gp);
+                gasprice.value = price.toString();
+            });
+
+        });
+    </script>
+</body>
+
+</html>

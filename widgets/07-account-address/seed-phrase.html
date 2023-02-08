@@ -1,0 +1,59 @@
+<html>
+
+<head>
+    <script src="..\common\ethers.js"></script>
+    <script src="..\common\ethers-keccak.js"></script>
+    <link rel="stylesheet" href="..\common\styles.css">
+</head>
+
+<body>
+    <div>
+        <h2>EOA Account</h2>
+    </div>
+    <div id="content">
+        <button id="gen-btn" class="button"><span>Generate </span></button>
+        <div>
+            <p>Private Key</p>
+            <p id="privatekey">...</p>
+        </div>
+        <div>
+            <p>Public Key</p>
+            <p id="publickey">...</p>
+        </div>
+        <div>
+            <p>Mnemonic:</p>
+            <p id="mnemonic">...</p>
+        </div>
+        <div>
+            <p>Address:</p>
+            <p id="address">...</p>
+        </div>
+        <div class="alert" id="alert"></div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const mnemonicConst = "surge burden label apart kingdom identify matrix tiger now home budget evolve";
+            const privKey = "0xd015b05a0d0ac48d0936b7112b37c2af92bb1a7c76e29dd7c94d7b647378c90e";
+            let privatekey = document.querySelector('#privatekey');
+            let publickey = document.querySelector('#publickey');
+            let mnemonic = document.querySelector('#mnemonic');
+            let addressVal = document.querySelector('#address');
+            let gen_btn = document.querySelector('#gen-btn');
+            let alert = document.querySelector('#alert');
+            gen_btn.addEventListener('click', function (event) {
+                alert.innerHTML = "";
+                try {
+                    var wallet = ethers.Wallet.fromMnemonic(mnemonicConst);
+                    privatekey.innerHTML = wallet.privateKey;
+                    publickey.innerHTML = wallet.publicKey;
+                    mnemonic.innerHTML = wallet.mnemonic.phrase;
+                    addressVal.innerHTML = "0x<strong>" + wallet.address.substring(2).toLowerCase() + "</strong>";
+                } catch (err) {
+                    alert.innerHTML = "Sorry, something wrong!";
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
