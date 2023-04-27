@@ -1,0 +1,66 @@
+Job Type: Live
+Job Name: ExtendVendingMachine
+InputFileName: Contract
+Run Script: cp -r /usercode/VendingMachine.sol /contracts/contracts/
+Application Port: 3000
+HTTPS Script Mode: false
+Force Relaunch On Run: false
+Force Relaunch On Widget Switch: true
+Start Script: cd /contracts && npx hardhat test test/VendingMachine.js
+
+Job Type: Live
+Job Name: Compile
+InputFileName: Contract
+Run Script: cp -r /usercode/contracts/VendingMachine.sol /contracts/contracts/ && cp -r /usercode/test/VendingMachine.js /contracts/test/ && cp -r /usercode/scripts/deploy.js /contracts/scripts/ && cp -r /usercode/hardhat.config.js /contracts/
+Application Port: 3000
+HTTPS Script Mode: false
+Force Relaunch On Run: false
+Force Relaunch On Widget Switch: true
+Start Script: cd /contracts && npx hardhat compile
+
+Job Type: Live
+Job Name: Deploy
+InputFileName: Contract
+Run Script: cp -r /usercode/contracts/VendingMachine.sol /contracts/contracts/ && cp -r /usercode/test/VendingMachine.js /contracts/test/ && cp -r /usercode/scripts/deploy.js /contracts/scripts/ && cp -r /usercode/hardhat.config.js /contracts/
+Application Port: 3000
+HTTPS Script Mode: false
+Force Relaunch On Run: false
+Force Relaunch On Widget Switch: true
+Start Script: cd /contracts && (nohup npx hardhat node 2> /dev/null &)
+
+Job Type: Live
+Job Name: Execute
+InputFileName: Contract
+Run Script: cp -r /usercode/sendTransaction.js /contracts/ && cp -r /usercode/contracts/VendingMachine.sol /contracts/contracts/ && cp -r /usercode/test/VendingMachine.js /contracts/test/ && cp -r /usercode/scripts/deploy.js /contracts/scripts/ && cp -r /usercode/hardhat.config.js /contracts/
+Application Port: 3000
+HTTPS Script Mode: false
+Force Relaunch On Run: false
+Force Relaunch On Widget Switch: true
+Start Script: cd /contracts && (nohup npx hardhat node 2> /dev/null &) && npx hardhat run scripts/deploy.js
+
+Exercise: create an account
+cd /blockchain && rm -r ./* && export PATH="/geth:$PATH"
+
+Exercise: initialize a node
+cd /blockchain && rm -r nodeB genesis.json boot.key password.txt && export PATH="/geth:$PATH"
+
+Exercise: start a boot node
+cd /blockchain && rm -r ./* && export PATH="/geth:$PATH"
+
+Exercise: start a node
+cd /blockchain && rm -r nodeB && export PATH="/geth:$PATH" && (nohup geth init --datadir nodeA genesis.json 2> /dev/null &) && (nohup bootnode -nodekey boot.key -addr 127.0.0.1:30305 2> /dev/null &)
+
+Job Type: Live
+Job Name: StartNode
+InputFileName: Geth
+Run Script: rm /blockchain/genesis.json && cp -r /usercode/genesis.json /blockchain/
+Application Port: 3000
+HTTPS Script Mode: false
+Force Relaunch On Run: false
+Force Relaunch On Widget Switch: true
+Start Script: cd /blockchain && export PATH="/geth:$PATH" && (nohup geth init --datadir nodeA genesis.json 2> /dev/null &) && (nohup bootnode -nodekey boot.key -addr 127.0.0.1:30305 2> /dev/null &)
+-> Exercise: geth --datadir nodeA --port 30306 --discovery.port 30307 --bootnodes "enode://408c82839e1c6f700ed714ff79e409177e7e94a1f2690dbe18ca0b2818624ab006d5e7f99a7d51f41295692b6da9c63639538331c6e9da86c7220b40e6f89c57@127.0.0.1:0?discport=30305" --networkid 12345 --unlock 0xB134860824326bdF27fAd8A8F2EBD92303DdeA6a --password password.txt --mine --miner.threads 1 -nat extip:127.0.0.1 --syncmode full --miner.etherbase 0xB134860824326bdF27fAd8A8F2EBD92303DdeA6a
+
+Exercise: interact with the blockchain
+cd /blockchain && export PATH="/geth:$PATH" && geth init --datadir nodeA genesis.json && 
+geth init --datadir nodeB genesis.json && (nohup bootnode -nodekey boot.key -addr 127.0.0.1:30305 2> /dev/null &) && (nohup geth --datadir nodeA --port 30306 --discovery.port 30307 --bootnodes "enode://408c82839e1c6f700ed714ff79e409177e7e94a1f2690dbe18ca0b2818624ab006d5e7f99a7d51f41295692b6da9c63639538331c6e9da86c7220b40e6f89c57@127.0.0.1:0?discport=30305" --networkid 12345 --unlock 0xB134860824326bdF27fAd8A8F2EBD92303DdeA6a --password password.txt --authrpc.port 8551 --ipcpath nodeA\geth.ipc --mine --miner.threads 1 -nat extip:127.0.0.1 --syncmode full --miner.etherbase 0xB134860824326bdF27fAd8A8F2EBD92303DdeA6a 2> /dev/null &) && (nohup geth --datadir nodeB --port 30308 --discovery.port 30309 --bootnodes "enode://408c82839e1c6f700ed714ff79e409177e7e94a1f2690dbe18ca0b2818624ab006d5e7f99a7d51f41295692b6da9c63639538331c6e9da86c7220b40e6f89c57@127.0.0.1:0?discport=30305" --networkid 12345 --unlock 0xA20Dc648435df0962A1C29C3A8baA27a8ebAf7bE --password password.txt --authrpc.port 8552 --ipcpath nodeB\geth.ipc --mine --miner.threads 1 -nat extip:127.0.0.1 --syncmode full --miner.etherbase 0xA20Dc648435df0962A1C29C3A8baA27a8ebAf7bE 2> /dev/null &)
