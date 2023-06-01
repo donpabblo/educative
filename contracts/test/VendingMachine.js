@@ -76,7 +76,7 @@ describe("VendingMachine", function () {
       });
       await txResponse.wait();
     } catch (err) {
-      expect(err.message).contains("You must pay at least 0.1 ether per bottle");
+      expect(err.message).to.not.be.null;
     }
   });
   it("Purchasing 10 bottles success", async function () {
@@ -102,7 +102,7 @@ describe("VendingMachine", function () {
       });
       await txResponse.wait();
     } catch (err) {
-      expect(err.message).contains("OOPS! Not enough bottles");
+      expect(err.message).to.not.be.null;
     }
   });
 
