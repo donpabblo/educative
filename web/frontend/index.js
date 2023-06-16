@@ -102,6 +102,26 @@ function getBlockInfo(number) {
     });
 }
 
+function getLastBlockInfo() {
+    return new Promise((resolve, reject) => {
+        loader.style.display = "block";
+        errorDiv.style.display = "none";
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", 'api/block', true);
+        xmlHttp.responseType = 'json';
+        xmlHttp.onload = function () {
+            var status = xmlHttp.status;
+            if (status === 200) {
+                resolve(xmlHttp.response);
+            } else {
+                reject(xmlHttp.response);
+            }
+            loader.style.display = "none";
+        }
+        xmlHttp.send();
+    });
+}
+
 function getTransactionInfo(hash) {
     return new Promise((resolve, reject) => {
         loader.style.display = "block";
@@ -131,15 +151,15 @@ function showBlockInfo(blockNumber) {
         blockdata.innerHTML += '<strong>Transactions (' + data.transactions.length + ')</strong>';
         for (let trans of data.transactions) {
             getTransactionInfo(trans).then(data => {
-                blockdata.innerHTML += '<div class="panel panel-default transaction">' + 
-                '<p>Hash: ' + data.transaction.hash + '</p>' +
-                '<p>Index: ' + data.transaction.transactionIndex + '</p>' +
-                '<p>From: ' + data.transaction.from + '</p>' +
-                '<p>To: 0x5FbDB2315678afecb367f032d93F642f64180aa3</p>' +
-                '<p>Function: ' + data.transaction.function + '(' + data.transaction.amount + ')</p>' +
-                '<p>Value: ' + data.transaction.value + ' wei</p>' +
-                '<p>Nonce: ' + data.transaction.nonce + '</p>' +
-                '</div>';
+                blockdata.innerHTML += '<div class="panel panel-default transaction">' +
+                    '<p>Hash: ' + data.transaction.hash + '</p>' +
+                    '<p>Index: ' + data.transaction.transactionIndex + '</p>' +
+                    '<p>From: ' + data.transaction.from + '</p>' +
+                    '<p>To: 0x5FbDB2315678afecb367f032d93F642f64180aa3</p>' +
+                    '<p>Function: ' + data.transaction.function + '(' + data.transaction.amount + ')</p>' +
+                    '<p>Value: ' + data.transaction.value + ' wei</p>' +
+                    '<p>Nonce: ' + data.transaction.nonce + '</p>' +
+                    '</div>';
             }).catch(err => {
                 modal.style.display = "none";
                 errorDiv.style.display = "block";
@@ -153,6 +173,19 @@ function showBlockInfo(blockNumber) {
     })
 }
 
+function init() {
+    getLastBlockInfo().then(data => {
+        for (let i = 1; i < data.number; i++) {
+            addBlock();
+        }
+    }).catch(err => {
+        modal.style.display = "none";
+        errorDiv.style.display = "block";
+        errorDiv.textContent = JSON.stringify(err);
+    })
+
+}
+
 function closeModal() {
     modal.style.display = "none";
 }
@@ -160,5 +193,6 @@ function closeModal() {
 window.addEventListener('load', async () => {
     userInfo();
     machineInfo();
+    init();
     document.querySelector("#purchase-btn").addEventListener("click", onPurchase);
 });
