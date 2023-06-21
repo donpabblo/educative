@@ -53,7 +53,7 @@ cd /blockchain && rm -r nodeB && export PATH="/geth:$PATH" && (nohup geth init -
 Job Type: Live
 Job Name: StartNode
 InputFileName: Geth
-Run Script: rm /blockchain/genesis.json && cp -r /usercode/genesis.json /blockchain/
+Run Script: rm /blockchain/genesis.json && cp -r /usercode/genesis.json /blockchain/ && rm /blockchain/geth-config.toml && cp -r /usercode/geth-config.toml
 Application Port: 3000
 HTTPS Script Mode: false
 Force Relaunch On Run: true
