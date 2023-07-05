@@ -1,0 +1,29 @@
+Job Type: Live
+Job Name: Task1
+InputFileName: Voting
+Run Script: cp -r /usercode/Voting.sol /project/contracts/
+Application Port: 3000
+HTTPS Script Mode: false
+Force Relaunch On Run: true
+Force Relaunch On Widget Switch: true
+Start Script: cd /project && npx hardhat test test/Voting1.js
+
+Job Type: Live
+Job Name: Task2
+InputFileName: Voting
+Run Script: cp -r /usercode/Voting.sol /project/contracts/
+Application Port: 3000
+HTTPS Script Mode: false
+Force Relaunch On Run: true
+Force Relaunch On Widget Switch: true
+Start Script: cd /project && npx hardhat test test/Voting2.js
+
+Job Type: Live
+Job Name: Task3
+InputFileName: Voting
+Run Script: cp -r /usercode/Voting.sol /project/contracts/
+Application Port: 3000
+HTTPS Script Mode: false
+Force Relaunch On Run: true
+Force Relaunch On Widget Switch: true
+Start Script: cd /project && npx hardhat test test/Voting3.js
